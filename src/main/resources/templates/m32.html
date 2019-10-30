@@ -7,12 +7,18 @@
 <script>
 $(document).ready(function(){
   $("button").click(function(){
-    $("#div1").load("http://www.baidu.com",function(responseTxt,statusTxt,xhr){
-      if(statusTxt=="success")
-        alert("外部内容加载成功!");
-      if(statusTxt=="error")
-        alert("Error: "+xhr.status+": "+xhr.statusText);
-    });
+   $.ajax(
+                {
+                    url:'http://localhost:8080/exampleone/m33',
+                    type:'post',
+                    dataType: "jsonp",
+					jsonpCallback: "showData",
+					success: function (response) {
+						console.log(response);
+						$("#div1").html(response.name);
+					} 
+                }
+            );
   });
 });
 </script>

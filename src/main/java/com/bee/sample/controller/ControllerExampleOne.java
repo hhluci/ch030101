@@ -2,6 +2,7 @@ package com.bee.sample.controller;
 
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -25,6 +26,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.bee.sample.conf.ApplicationException;
 import com.bee.sample.entity.Order;
 import com.bee.sample.entity.OrderDetail;
 import com.bee.sample.entity.OrderForm;
@@ -279,8 +281,40 @@ public class ControllerExampleOne {
 		return "session handler interceptor";
 	}
 	//配合WebConfig中的addCorsMappings演示
+	//先访问/m32,然后在浏览器中查看源代码，并将它保存为本地文件
+	//然后用浏览器打开，测试/m33方法跨域请求
 	@RequestMapping("/m32")
 	public  String m32() {
 		return "m32.html";
 	}
+	//配合WebConfig中的addCorsMappings演示
+		@RequestMapping("/m33")
+		public  @ResponseBody String m33() {
+			return "showData({'age':123,'name':'1111'})";
+		}
+		
+		//JacksonConf类来配合演示,观测返回的日期字符串的值
+		@RequestMapping("/m34")
+		public @ResponseBody Map m34() {
+			Map map = new HashMap();
+			map.put("time", new Date());
+			return map;
+		}
+		
+		//通用错误处理,演示非json请求,需要配合ErrorController使用，还需要一个error.html
+		@RequestMapping("/m35")
+		public @ResponseBody String m35(boolean flag) {
+			if(flag) {
+			throw new ApplicationException("this is a general error");
+			}
+			return "general error";
+		}
+		//通用错误处理,演示json请求,需要配合ErrorController使用
+		@RequestMapping("/m36.json")
+		public @ResponseBody String m36(boolean flag) {
+			if(flag) {
+			throw new ApplicationException("this is a general error");
+			}
+			return "general error";
+		}
 }
